@@ -1,0 +1,33 @@
+<idea-plugin>
+  <id>com.mvp.plugin</id>
+  <name>MVP_Plugin</name>
+  <version>1.2.6</version>
+  <vendor email="zhanyang.chen@gmail.com" url="">陈占洋</vendor>
+
+  <description>一款MVP框架代码生成插件。帮助使用者管理V、P层的关系，取消V层继承框架内的类。</description>
+
+  <change-notes>一款MVP框架代码生成插件。帮助使用者管理V、P层的关系，取消V层继承框架内的类。</change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="163.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="Mvp_Plugin.Mvp_Code_Action_Id" class="com.mvp.plugin.MvpCodeAction" text="Mvp-Code"
+            description="一款Mvp框架代码生成插件">
+      <add-to-group group-id="GenerateGroup" anchor="first"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="alt V" second-keystroke="alt V"/>
+    </action>
+  </actions>
+
+</idea-plugin>
