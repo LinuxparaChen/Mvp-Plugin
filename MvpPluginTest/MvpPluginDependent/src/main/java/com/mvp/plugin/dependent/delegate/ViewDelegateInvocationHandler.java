@@ -5,11 +5,11 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class DelegateInvocationHandler implements InvocationHandler {
+public class ViewDelegateInvocationHandler implements InvocationHandler {
 
     private final WeakReference<Object> mWrTarget;
 
-    public DelegateInvocationHandler(Object target) {
+    public ViewDelegateInvocationHandler(Object target) {
         mWrTarget = new WeakReference<>(target);
     }
 
@@ -19,12 +19,13 @@ public class DelegateInvocationHandler implements InvocationHandler {
         if (mWrTarget.get() != null) {
             try {
                 Method delegateMethod = mWrTarget.get().getClass().getMethod(method.getName(), method.getParameterTypes());
+                delegateMethod.setAccessible(true);
                 return delegateMethod.invoke(mWrTarget.get(), args);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        Exception e = new Exception("DelegateInvocationHandler 的被代理对象被回收了！代理的方法：" + method.getName() + " 参数：" + Arrays.toString(method.getParameterTypes()));
+        Exception e = new Exception("View的被代理对象被回收了！代理的方法：" + method.getName() + " 参数：" + Arrays.toString(method.getParameterTypes()));
         e.printStackTrace();
         return null;
     }

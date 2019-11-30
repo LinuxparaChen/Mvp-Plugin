@@ -21,10 +21,6 @@ public class PsiAnnotationTool {
     }
 
     public static List<PsiClass> findAnoClazzArrayValue(@NotNull PsiAnnotation annotation, @NotNull String key) {
-        if (annotation == null || !annotation.isValid()){
-            return null;
-        }
-
         List<PsiClass> values = new ArrayList<>();
         PsiAnnotationMemberValue annotationValue = annotation.findAttributeValue(key);
         for (PsiElement psiElement : annotationValue.getChildren()) {

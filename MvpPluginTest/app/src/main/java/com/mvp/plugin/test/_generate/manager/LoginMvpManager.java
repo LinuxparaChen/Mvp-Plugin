@@ -1,16 +1,19 @@
 package com.mvp.plugin.test._generate.manager;
 
-import com.mvp.plugin.test._generate.presenter.ILoginPresenter;
-import com.mvp.plugin.test._generate.view.ILoginView;
+import com.mvp.plugin.dependent.delegate.PresenterDelegateInvocationHandler;
+import com.mvp.plugin.dependent.delegate.ViewDelegateInvocationHandler;
+import com.mvp.plugin.test.LoginPresenter;
+
+import java.lang.reflect.Proxy;
 
 public class LoginMvpManager {
-    private static ILoginView createViewDelegate(Object view) {
-        return (ILoginView) java.lang.reflect.Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{ILoginView.class}, new com.mvp.plugin.dependent.delegate.DelegateInvocationHandler(view));
+    public static com.mvp.plugin.test._generate.view.ILoginView createViewDelegate(Object view) {
+        return (com.mvp.plugin.test._generate.view.ILoginView) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{com.mvp.plugin.test._generate.view.ILoginView.class}, new ViewDelegateInvocationHandler(view));
     }
 
-    public static ILoginPresenter createLoginPresenterDelegate(Object view) {
-        ILoginView viewDelegate = createViewDelegate(view);
-        com.mvp.plugin.test.LoginPresenter presenter = new com.mvp.plugin.test.LoginPresenter(viewDelegate);
-        return (ILoginPresenter) java.lang.reflect.Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{ILoginPresenter.class}, new com.mvp.plugin.dependent.delegate.DelegateInvocationHandler(presenter));
+    public static com.mvp.plugin.test._generate.presenter.ILoginPresenter createLoginPresenterDelegate(Object view) {
+        com.mvp.plugin.test._generate.view.ILoginView viewDelegate = createViewDelegate(view);
+        LoginPresenter presenter = new LoginPresenter(viewDelegate);
+        return (com.mvp.plugin.test._generate.presenter.ILoginPresenter) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{com.mvp.plugin.test._generate.presenter.ILoginPresenter.class}, new PresenterDelegateInvocationHandler(presenter));
     }
 }

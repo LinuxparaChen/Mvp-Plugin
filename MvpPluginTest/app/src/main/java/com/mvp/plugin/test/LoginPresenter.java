@@ -5,6 +5,7 @@ import com.mvp.plugin.test._generate.view.ILoginView;
 
 public class LoginPresenter {
 
+
     private final ILoginView mLoginView;
 
     public LoginPresenter(ILoginView viewDelegate) {
@@ -13,6 +14,6 @@ public class LoginPresenter {
 
     @MVP_Itr
     public void login(String name, String passwd){
-        mLoginView.updateUiWithUser(name+" - "+passwd);
+        mLoginView.showLoginSuccess(name+" - "+passwd);
     }
 }
