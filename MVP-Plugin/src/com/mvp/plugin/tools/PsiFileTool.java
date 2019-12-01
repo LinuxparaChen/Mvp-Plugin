@@ -81,6 +81,8 @@ public class PsiFileTool {
             psiClazz = JavaDirectoryService.getInstance().createClass(parentDir, Clazz.getName());
         }
 
+        psiClazz.getModifierList().setModifierProperty(PsiModifier.PUBLIC,true);
+
         for (PsiImportStatement clazzImport : Clazz.getImports()) {
             ((PsiJavaFile) psiClazz.getContainingFile()).getImportList().add(clazzImport);
         }
