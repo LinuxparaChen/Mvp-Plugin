@@ -23,6 +23,7 @@ public class MvpCodeAction extends AnAction {
     public static final String MVP_V_Key = "key";
     public static final String MVP_V_Presenters = "presenters";
     public static final String MVP_Itr = "com.mvp.plugin.dependent.annotation.MVP_Itr";
+    public static final String Execute_On = "com.mvp.plugin.dependent.annotation.ExecuteOn";
 
     public static final String MVP_DIALOG_TITLE = "Mvp-Code";
 
@@ -81,6 +82,10 @@ public class MvpCodeAction extends AnAction {
             Messages.showMessageDialog(psiClazz.getName() + " 类中被@MVP_Itr注解的函数不能被static修饰！", MVP_DIALOG_TITLE, null);
             return;
         }
+        if (PsiMethodTool.isNotReturnVoidByExecuteOn(extractViewPsiMethods)) {
+            Messages.showMessageDialog(psiClazz.getName() + " 类中被@ExecuteOn注解的函数返回值必须是void！", MVP_DIALOG_TITLE, null);
+            return;
+        }
         //=============================================生成View接口==============================================
         PsiElementFactory psiElementFactory = JavaPsiFacade.getElementFactory(psiClazz.getProject());
         List<PsiMethod> viewItrMethods = PsiMethodTool.generateItrPsiMethods(extractViewPsiMethods, psiElementFactory);
@@ -89,11 +94,13 @@ public class MvpCodeAction extends AnAction {
 
         MvpClazz mvpManagerClazz = new MvpClazz(_Mvp_V_Packaged + ".manager", _Mvp_V_Key + "MvpManager");
         PsiImportStatement proxyPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("java.lang.reflect.Proxy").resolve());
-        PsiImportStatement viewInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.ViewDelegateInvocationHandler").resolve());
-        PsiImportStatement presenterInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.PresenterDelegateInvocationHandler").resolve());
+        PsiImportStatement invocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.DelegateInvocationHandler").resolve());
+//        PsiImportStatement viewInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.ViewDelegateInvocationHandler").resolve());
+//        PsiImportStatement presenterInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.PresenterDelegateInvocationHandler").resolve());
         mvpManagerClazz.addPsiImort(proxyPsiImport);
-        mvpManagerClazz.addPsiImort(viewInvocationHandlerPsiImport);
-        mvpManagerClazz.addPsiImort(presenterInvocationHandlerPsiImport);
+        mvpManagerClazz.addPsiImort(invocationHandlerPsiImport);
+//        mvpManagerClazz.addPsiImort(viewInvocationHandlerPsiImport);
+//        mvpManagerClazz.addPsiImort(presenterInvocationHandlerPsiImport);
         mvpManagerClazz.addPsiMethod(PsiMethodTool.createManagerPsiMethodView(psiElementFactory, "createViewDelegate", viewItrType));
 
         List<MvpClazz> presenterItrClazzList = new ArrayList<>();
@@ -106,6 +113,10 @@ public class MvpCodeAction extends AnAction {
             }
             if (PsiMethodTool.isModifierByStatic(extractPresenterPsiMethods)) {
                 Messages.showMessageDialog(mvp_v_presenter.getName() + "中被@MVP_Itr注解的函数不能被static修饰！", MVP_DIALOG_TITLE, null);
+                return;
+            }
+            if (PsiMethodTool.isNotReturnVoidByExecuteOn(extractPresenterPsiMethods)) {
+                Messages.showMessageDialog(psiClazz.getName() + " 类中被@ExecuteOn注解的函数返回值必须是void！", MVP_DIALOG_TITLE, null);
                 return;
             }
 

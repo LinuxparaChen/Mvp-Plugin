@@ -1,6 +1,10 @@
 package com.mvp.plugin.dependent.delegate;
 
+import com.mvp.plugin.dependent.annotation.ExecuteOn;
+import com.mvp.plugin.dependent.thread.ThreadTool;
+
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class PresenterDelegateInvocationHandler implements InvocationHandler {
@@ -17,9 +21,50 @@ public class PresenterDelegateInvocationHandler implements InvocationHandler {
         try {
             Method delegateMethod = mTarget.getClass().getMethod(method.getName(), method.getParameterTypes());
             delegateMethod.setAccessible(true);
-            return delegateMethod.invoke(mTarget, args);
-        } catch (Exception e) {
+            if (!needThreadHandle(delegateMethod,args)) {
+                return invokeMethod(delegateMethod, mTarget, args);
+            }
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean needThreadHandle(Method method,Object[] args){
+        ExecuteOn executeOnAnno = method.getAnnotation(ExecuteOn.class);
+        if (executeOnAnno != null) {
+            if (method.getReturnType() != Void.TYPE) {
+                throw new RuntimeException("ExecuteOn注解修饰的函数" + method.getName() + "返回值必须是void！");
+            }
+            switch (executeOnAnno.thread()) {
+                case MAIN:
+                    ThreadTool.executeOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            invokeMethod(method, mTarget, args);
+                        }
+                    });
+                    return true;
+                case ASYNC:
+                    ThreadTool.executeOnAsyncThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            invokeMethod(method, mTarget, args);
+                        }
+                    });
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private Object invokeMethod(Method method, Object target, Object[] args) {
+        try {
+            return method.invoke(target, args);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }

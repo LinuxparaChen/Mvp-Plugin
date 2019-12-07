@@ -1,20 +1,23 @@
 package com.mvp.plugin.dependent.delegate;
 
 import com.mvp.plugin.dependent.annotation.ExecuteOn;
-import com.mvp.plugin.dependent.thread.ThreadMode;
 import com.mvp.plugin.dependent.thread.ThreadTool;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class ViewDelegateInvocationHandler implements InvocationHandler {
+public class DelegateInvocationHandler implements InvocationHandler {
 
     private final WeakReference<Object> mWrTarget;
 
-    public ViewDelegateInvocationHandler(Object target) {
+    public DelegateInvocationHandler(Object target) {
         mWrTarget = new WeakReference<>(target);
     }
 
@@ -26,7 +29,7 @@ public class ViewDelegateInvocationHandler implements InvocationHandler {
                 //被代理的方法
                 Method delegateMethod = mWrTarget.get().getClass().getMethod(method.getName(), method.getParameterTypes());
                 delegateMethod.setAccessible(true);
-                if (!needThreadHandle(delegateMethod,args)) {
+                if (!needThreadHandle(delegateMethod, args)) {
                     return invokeMethod(delegateMethod, mWrTarget.get(), args);
                 }
             } catch (NoSuchMethodException e) {
@@ -39,7 +42,7 @@ public class ViewDelegateInvocationHandler implements InvocationHandler {
         return null;
     }
 
-    private boolean needThreadHandle(Method method,Object[] args){
+    private boolean needThreadHandle(Method method, Object[] args) {
         ExecuteOn executeOnAnno = method.getAnnotation(ExecuteOn.class);
         if (executeOnAnno != null) {
             if (method.getReturnType() != Void.TYPE) {
