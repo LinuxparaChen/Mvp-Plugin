@@ -1,5 +1,7 @@
 package com.mvp.plugin.dependent.delegate;
 
+import android.util.Log;
+
 import com.mvp.plugin.dependent.annotation.ExecuteOn;
 import com.mvp.plugin.dependent.thread.ThreadTool;
 
@@ -76,8 +78,28 @@ public class DelegateInvocationHandler implements InvocationHandler {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            String exception = filterException(e);
+            throw new RuntimeException(exception.replace("java.lang.RuntimeException:", ""));
         }
         return null;
+    }
+
+    private String filterException(Exception e) {
+        StringBuffer sb = new StringBuffer();
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        try {
+            e.printStackTrace(pw);
+        } finally {
+            pw.close();
+        }
+        String[] exceptions = sw.toString().split("Caused by: ");
+        for (int i = 0; i < exceptions.length; i++) {
+            if (exceptions[i].startsWith("java.lang.RuntimeException:") &&
+                    !exceptions[i].startsWith("java.lang.RuntimeException: java.lang.reflect.InvocationTargetException")) {
+                sb.append(exceptions[i]);
+            }
+        }
+        return sb.toString();
     }
 }

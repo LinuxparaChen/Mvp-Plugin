@@ -29,10 +29,24 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+//    implementation 'androidx.appcompat:appcompat:1.1.0'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test:runner:1.2.0'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+
+task cleanJar(type: Delete) {
+    delete 'build/outputs/jar/MvpPluginDependent.jar'
+}
+
+task buildJar(type: Jar) {
+    from zipTree(file('build/intermediates/packaged-classes/release/classes.jar'))
+    from fileTree(dir: 'src/main', includes: ['res/**'])
+    baseName = 'MvpPluginDependent'
+    destinationDir = file('build/outputs/jar')
+}
+
+buildJar.dependsOn(cleanJar, build)

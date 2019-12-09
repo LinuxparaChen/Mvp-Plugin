@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.mvp.plugin</id>
   <name>MVP_Plugin</name>
-  <version>1.2.8</version>
+  <version>1.3.0</version>
   <vendor email="zhanyang.chen@gmail.com" url="">陈占洋</vendor>
 
   <description>一款MVP框架代码生成插件。帮助使用者管理V、P层的关系，取消V层继承框架内的类。</description>

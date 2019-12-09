@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         mPresenter.login("Test", "123456");
     }
 
-    @ExecuteOn(thread = ThreadMode.MAIN)
+//    @ExecuteOn(thread = ThreadMode.MAIN)
     @MVP_Itr
     public void showLoginSuccess(String name) {
         Log.e("chen_zhanyang", "view showLoginSuccess: thread-name:" + Thread.currentThread().getName());
