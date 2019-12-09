@@ -94,13 +94,11 @@ public class MvpCodeAction extends AnAction {
 
         MvpClazz mvpManagerClazz = new MvpClazz(_Mvp_V_Packaged + ".manager", _Mvp_V_Key + "MvpManager");
         PsiImportStatement proxyPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("java.lang.reflect.Proxy").resolve());
-        PsiImportStatement invocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.DelegateInvocationHandler").resolve());
-//        PsiImportStatement viewInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.ViewDelegateInvocationHandler").resolve());
-//        PsiImportStatement presenterInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.PresenterDelegateInvocationHandler").resolve());
+        PsiImportStatement viewInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.ViewDelegateInvocationHandler").resolve());
+        PsiImportStatement presenterInvocationHandlerPsiImport = psiElementFactory.createImportStatement(psiElementFactory.createTypeByFQClassName("com.mvp.plugin.dependent.delegate.PresenterDelegateInvocationHandler").resolve());
         mvpManagerClazz.addPsiImort(proxyPsiImport);
-        mvpManagerClazz.addPsiImort(invocationHandlerPsiImport);
-//        mvpManagerClazz.addPsiImort(viewInvocationHandlerPsiImport);
-//        mvpManagerClazz.addPsiImort(presenterInvocationHandlerPsiImport);
+        mvpManagerClazz.addPsiImort(viewInvocationHandlerPsiImport);
+        mvpManagerClazz.addPsiImort(presenterInvocationHandlerPsiImport);
         mvpManagerClazz.addPsiMethod(PsiMethodTool.createManagerPsiMethodView(psiElementFactory, "createViewDelegate", viewItrType));
 
         List<MvpClazz> presenterItrClazzList = new ArrayList<>();

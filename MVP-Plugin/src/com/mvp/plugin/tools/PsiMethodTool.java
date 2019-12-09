@@ -66,8 +66,7 @@ public class PsiMethodTool {
     public static PsiMethod createManagerPsiMethodView(@NotNull PsiElementFactory psiElementFactory, @NotNull String methodName, @NotNull PsiType returnType) {
         PsiMethod psiMethod = createStaticMethod(psiElementFactory, methodName, returnType, false);
 
-//        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new ViewDelegateInvocationHandler(view));";
-        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new DelegateInvocationHandler(view));";
+        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new ViewDelegateInvocationHandler(view));";
         PsiStatement psiStatement = psiElementFactory.createStatementFromText(String.format(createDelegateText, returnType.getCanonicalText(), returnType.getCanonicalText()), null);
         psiMethod.getBody().add(psiStatement);
 
@@ -83,8 +82,7 @@ public class PsiMethodTool {
         String varPresenterText = "%s presenter = new %s(viewDelegate);";
         PsiStatement varPresenterStatement = psiElementFactory.createStatementFromText(String.format(varPresenterText, presenterType.getCanonicalText(), presenterType.getCanonicalText()), null);
 
-//        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new PresenterDelegateInvocationHandler(presenter));";
-        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new DelegateInvocationHandler(presenter));";
+        String createDelegateText = "return (%s) Proxy.newProxyInstance(view.getClass().getClassLoader(), new Class[]{%s.class}, new PresenterDelegateInvocationHandler(presenter));";
         PsiStatement createDelegateStatement = psiElementFactory.createStatementFromText(String.format(createDelegateText, returnType.getCanonicalText(), returnType.getCanonicalText()), null);
 
         psiMethod.getBody().add(callMethodStatement);

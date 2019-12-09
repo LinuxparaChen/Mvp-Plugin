@@ -1,7 +1,8 @@
 package com.mvp.plugin.dependent.delegate;
 
 import com.mvp.plugin.dependent.annotation.ExecuteOn;
-import com.mvp.plugin.dependent.thread.ThreadTool;
+import com.mvp.plugin.dependent.tools.MethodTool;
+import com.mvp.plugin.dependent.tools.ThreadTool;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +23,7 @@ public class PresenterDelegateInvocationHandler implements InvocationHandler {
             Method delegateMethod = mTarget.getClass().getMethod(method.getName(), method.getParameterTypes());
             delegateMethod.setAccessible(true);
             if (!needThreadHandle(delegateMethod,args)) {
-                return invokeMethod(delegateMethod, mTarget, args);
+                return MethodTool.invokeMethod(delegateMethod, mTarget, args);
             }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -41,7 +42,7 @@ public class PresenterDelegateInvocationHandler implements InvocationHandler {
                     ThreadTool.executeOnMainThread(new Runnable() {
                         @Override
                         public void run() {
-                            invokeMethod(method, mTarget, args);
+                            MethodTool.invokeMethod(method, mTarget, args);
                         }
                     });
                     return true;
@@ -49,7 +50,7 @@ public class PresenterDelegateInvocationHandler implements InvocationHandler {
                     ThreadTool.executeOnAsyncThread(new Runnable() {
                         @Override
                         public void run() {
-                            invokeMethod(method, mTarget, args);
+                            MethodTool.invokeMethod(method, mTarget, args);
                         }
                     });
                     return true;
@@ -58,14 +59,4 @@ public class PresenterDelegateInvocationHandler implements InvocationHandler {
         return false;
     }
 
-    private Object invokeMethod(Method method, Object target, Object[] args) {
-        try {
-            return method.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
 }
