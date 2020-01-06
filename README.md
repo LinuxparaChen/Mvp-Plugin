@@ -2,7 +2,7 @@
 ### AS下一款MVP框架代码生成插件(MVP框架经过重新设计)
 #### 使用步骤：
 1. AS中安装[MVP_Plugin](https://github.com/LinuxparaChen/Mvp-Plugin/releases)插件。
-2. 下载[MvpPluginDependent.jar](https://github.com/LinuxparaChen/Mvp-Plugin/releases)并添加到项目的libs目录中。
+2. 下载[MvpPluginDependent](https://github.com/LinuxparaChen/Mvp-Plugin/releases)并添加到项目的libs目录中。
 3. V层指定key和对应P层的类，如下：
 ```
 @MVP_V(key = "Login", presenters = {LoginPresenter.class})
@@ -60,4 +60,4 @@ public class LoginPresenter {
     }
 }
 ```
-5. @ExecuteOn注解用于指定此方法执行时所在线程，被此注解修饰的方法必须被@MVP_Itr修饰。
+5. @ExecuteOn注解用于指定此方法执行时所在线程，目前只支持ThreadMode.MAIN和ThreadMode.ASYNC，被此注解修饰的方法必须被@MVP_Itr修饰。
