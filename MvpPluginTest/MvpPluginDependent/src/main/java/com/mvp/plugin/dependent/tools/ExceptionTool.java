@@ -16,8 +16,8 @@ public class ExceptionTool {
         }
         String[] exceptions = sw.toString().split("Caused by: ");
         for (int i = 0; i < exceptions.length; i++) {
-            if (exceptions[i].startsWith("java.lang.RuntimeException:") &&
-                    !exceptions[i].startsWith("java.lang.RuntimeException: java.lang.reflect.InvocationTargetException")) {
+            if (!exceptions[i].startsWith("java.lang.RuntimeException: java.lang.reflect.InvocationTargetException") &&
+                    !exceptions[i].startsWith("java.lang.reflect.InvocationTargetException")) {
                 sb.append(exceptions[i]);
             }
         }
